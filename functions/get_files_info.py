@@ -24,12 +24,12 @@ def get_files_info(working_directory, directory="."):
     
 
 # Helper functions
-def format_info(path):
+def format_info(path, item):
     size = os.path.getsize(path)
-    return f"- {path}: file_size={size} bytes, is_dir={os.path.isdir(path)}"
+    return f"- {item}: file_size={size} bytes, is_dir={os.path.isdir(path)}"
 
 def get_dir_contents(dir):
-    return "\n".join(map(lambda item: format_info(item), os.listdir(dir))) 
+    return "\n".join(map(lambda item: format_info(os.path.join(dir, item), item), os.listdir(dir))) 
 
 
 if __name__ == "__main__":
