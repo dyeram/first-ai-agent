@@ -24,13 +24,8 @@ def get_files_info(working_directory, directory="."):
     
 
 # Helper functions
-def get_file_size(path):
-    if os.path.isfile(path):
-        return os.path.getsize(path)
-    return None
-
 def format_info(path):
-    size = get_file_size(path)
+    size = os.path.getsize(path)
     return f"- {path}: file_size={size} bytes, is_dir={os.path.isdir(path)}"
 
 def get_dir_contents(dir):
