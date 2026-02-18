@@ -6,7 +6,7 @@ def main():
         ("calculator", "current directory", "."),
         ("calculator", "'pkg'", "pkg"),
         ("calculator", "'/bin'", "/bin"),
-        ("calculator", "../", "../")
+        ("calculator", "'../'", "../")
     ]
 
     # loop through test cases

@@ -8,8 +8,8 @@ def get_files_info(working_directory, directory="."):
     target_dir = os.path.normpath(os.path.join(working_directory_abs, directory))
 
     # is target_dir in working_directory? (True/False)
-    valid_target_directory = os.path.commonpath([working_directory_abs, target_dir])
-    if valid_target_directory is False:
+    valid_target_directory = os.path.commonpath([working_directory_abs, target_dir]) == working_directory_abs
+    if not valid_target_directory:
         return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
     
     # is target_dir an existing directory?
