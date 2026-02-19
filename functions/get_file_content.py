@@ -19,9 +19,17 @@ def get_file_content(working_directory, file_path):
     
     # get contents of target file (as single string up to CHAR_LIMIT)
     try:
-        content = target_file.read(size = CHAR_LIMIT)
-        if target_file.read(size = CHAR_LIMIT + 1)[CHAR_LIMIT + 1] is "":
-            content += f'[...File "{file_path}" truncated at {CHAR_LIMIT} characters]'
-        return content
+        with open(target_file, "r") as f:
+            content = f.read(CHAR_LIMIT)
+            length = len(content)
+        
+            # If there's a character at CHAR_LIMIT + 1
+            # update length to include that character and the rest of the file
+            if f.read(1):
+                length += 1 + len(f.read())
+                content += f'[...File "{file_path}" truncated at {CHAR_LIMIT} characters]'
+        
+        return length, content
+    
     except Exception as e:
         return f"Error: {e}"
