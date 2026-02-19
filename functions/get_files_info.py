@@ -30,7 +30,3 @@ def format_info(path, item):
 
 def get_dir_contents(dir):
     return "\n".join(map(lambda item: format_info(os.path.join(dir, item), item), os.listdir(dir))) 
-
-
-if __name__ == "__main__":
-    print(get_files_info("."))
