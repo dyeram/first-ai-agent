@@ -1,6 +1,7 @@
 # functions/get_file_content
 
 import os.path
+from config import CHAR_LIMIT
 
 def get_file_content(working_directory, file_path):
     # Setup target_file_path
@@ -14,4 +15,13 @@ def get_file_content(working_directory, file_path):
     
     # is file_path a file?
     if not os.path.isfile(target_file):
-        return f'Error: "{file_path}" is not a directory'
+        return f'Error: File not found or is not a regular file: "{file_path}"'
+    
+    # get contents of target file (as single string up to CHAR_LIMIT)
+    try:
+        content = target_file.read(size = CHAR_LIMIT)
+        if target_file.read(size = CHAR_LIMIT + 1)[CHAR_LIMIT + 1] is "":
+            content += f'[...File "{file_path}" truncated at {CHAR_LIMIT} characters]'
+        return content
+    except Exception as e:
+        return f"Error: {e}"
