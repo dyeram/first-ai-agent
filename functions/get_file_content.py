@@ -23,7 +23,6 @@ def get_file_content(working_directory, file_path):
             content = f.read(CHAR_LIMIT)
         
             # If there's a character at CHAR_LIMIT + 1
-            # update length to include that character and the rest of the file
             if f.read(1):
                 content += f'[...File "{file_path}" truncated at {CHAR_LIMIT} characters]'
         

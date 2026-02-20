@@ -4,7 +4,7 @@ def main():
     # Test cases ("working directory", "file_label", "file")
     test_cases = [
         ("calculator", "'lorem.txt'", "lorem.txt"),
-        ("calculator", "'pkg/calculator'", "pkg/calculator.py"),
+        ("calculator", "'pkg/calculator.py'", "pkg/calculator.py"),
         ("calculator", "'/bin/cat'", "/bin/cat"),
         ("calculator", "'pkg/does_not_exist.py'", "pkg/does_not_exist.py")
     ]
