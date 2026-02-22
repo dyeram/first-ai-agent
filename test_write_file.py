@@ -13,6 +13,5 @@ def main():
         print(f"Result for {file_label}:")
         print(f"{write_file(working_directory, file_path, content)}")
 
-
 if __name__ == "__main__":
     main()

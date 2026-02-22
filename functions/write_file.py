@@ -14,11 +14,11 @@ def write_file(working_directory, file_path, content):
             return f'Error: Cannot write to "{file_path}" as it is outside the permitted working directory'
         
         # is target_file_path an existing directory?
-        if not os.path.isdir(target_file_path):
+        if os.path.isdir(target_file_path):
             return f'Error: Cannot write to "{file_path}" as it is a directory'
         
         # Create all parent directories of target_file_path (if they dont exist already)
-        target_file_path = os.makedirs(target_file_path, exist_ok=True)
+        os.makedirs(os.path.dirname(target_file_path), exist_ok=True)
 
         with open(target_file_path, "w") as f:
             f.write(content)
