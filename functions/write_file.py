@@ -5,11 +5,11 @@ import os.path
 def write_file(working_directory, file_path, content):
     try:
         # Setup target_file_path
-        working_directory_abs = os.path.abspath(working_directory)
-        target_file_path = os.path.normpath(os.path.join(working_directory_abs, file_path))
+        abs_working_directory = os.path.abspath(working_directory)
+        target_file_path = os.path.normpath(os.path.join(abs_working_directory, file_path))
 
         # is target_file_path in working_directory? (True/False)
-        valid_target_file = os.path.commonpath([working_directory_abs, target_file_path]) == working_directory_abs
+        valid_target_file = os.path.commonpath([abs_working_directory, target_file_path]) == abs_working_directory
         if not valid_target_file:
             return f'Error: Cannot write to "{file_path}" as it is outside the permitted working directory'
         
