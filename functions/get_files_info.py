@@ -19,6 +19,7 @@ def get_files_info(working_directory, directory="."):
 
         # get contents of target directory (as single string)
         return get_dir_contents(target_dir)
+    
     except Exception as e:
         return f"Error: {e}"
     
