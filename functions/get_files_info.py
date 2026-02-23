@@ -6,7 +6,7 @@ def get_files_info(working_directory, directory="."):
     try:
         # Setup target directory
         abs_working_directory = os.path.abspath(working_directory)
-        target_dir = os.path.normpath(os.path.join(working_directory_abs, directory))
+        target_dir = os.path.normpath(os.path.join(abs_working_directory, directory))
 
         # is target_dir in working_directory? (True/False)
         valid_target_directory = os.path.commonpath([abs_working_directory, target_dir]) == abs_working_directory
