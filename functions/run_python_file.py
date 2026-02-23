@@ -15,11 +15,11 @@ def run_python_file(working_directory, file_path, args=None):
             return f'Error: Cannot execute "{file_path}" as it is outside the permitted working directory'
 
         # is file_path a file?
-        if not os.path.isfile(file_path):
+        if not os.path.isfile(target_file_path):
             return f'Error: "{file_path}" does not exist or is not a regular file'
         
         # does file_path end in .py (i.e. python file)?
-        if not target_file_path.endswith(".py")
+        if not target_file_path.endswith(".py"):
             return f'Error: "{file_path}" is not a Python file'
         
         # Define command and add optional args (list: [python, functions/func.py, input, output])
@@ -30,7 +30,7 @@ def run_python_file(working_directory, file_path, args=None):
             command.extend(args)
 
         # Run subprocess
-        completed_process = subprocess.run(command, cwd=abs_working_directory, capture_output=True, text=True, timeout=30):
+        completed_process = subprocess.run(command, cwd=abs_working_directory, capture_output=True, text=True, timeout=30)
         
         # Return output of completed_process and include any errors
         output = []
@@ -39,9 +39,9 @@ def run_python_file(working_directory, file_path, args=None):
         if completed_process.stdout is None and completed_process.stderr is None:
             output.append("No output produced")
         else: 
-            output.append(f"STDOUT:{completed_process.stdout}")
-            output.append(f"STDERR:{completed_process.stderr}")
-        return "\.n".join(output)
+            output.append(f"STDOUT:\n{completed_process.stdout}")
+            output.append(f"STDERR:\n{completed_process.stderr}")
+        return "".join(output)
     
     except Exception as e:
         return f"Error: {e}"
