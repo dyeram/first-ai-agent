@@ -15,7 +15,6 @@ def main():
     for working_directory, file_path, args in test_cases:
         print(f"Result for '{file_path}' | args={args}")
         print(f"{run_python_file(working_directory, file_path, args=None)}")
-        print() # new empty line
 
 if __name__ == "__main__":
     main()

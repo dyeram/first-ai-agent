@@ -26,22 +26,26 @@ def run_python_file(working_directory, file_path, args=None):
         command = ["python", target_file_path]
         if args is not None and not isinstance(args, list):
             raise TypeError("args must be a list of strings")
-        if args is not None:
+        if args:
             command.extend(args)
 
         # Run subprocess
-        completed_process = subprocess.run(command, cwd=abs_working_directory, capture_output=True, text=True, timeout=30)
+        completed_process = subprocess.run(command,
+                                           cwd=abs_working_directory,
+                                           capture_output=True,
+                                           text=True,
+                                           timeout=30)
         
         # Return output of completed_process and include any errors
         output = []
         if completed_process.returncode != 0:
             output.append(f"Process exited with code {completed_process.returncode}")
-        if completed_process.stdout is None and completed_process.stderr is None:
+        if not completed_process.stdout and not completed_process.stderr:
             output.append("No output produced")
         else: 
             output.append(f"STDOUT:\n{completed_process.stdout}")
             output.append(f"STDERR:\n{completed_process.stderr}")
-        return "".join(output)
+        return "\n".join(output)
     
     except Exception as e:
         return f"Error: {e}"
