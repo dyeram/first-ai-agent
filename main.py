@@ -17,7 +17,7 @@ def main():
     # Load API key from .env
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
-    if api_key is None:
+    if not api_key:
         raise RuntimeError("GEMINI_API_KEY environmental variable is missing.")
     
     # Define inputs and call LLM (via Google's genai)
@@ -38,7 +38,7 @@ def generate_content(client, messages, prompt, verbose):
     )
 
     # Verify successful API request
-    if response.usage_metadata is None:
+    if not response.usage_metadata:
         raise RuntimeError("API request failed")
     
     # Print --verbose response
