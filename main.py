@@ -2,6 +2,8 @@ import os
 import argparse
 
 from dotenv import load_dotenv
+from prompts import system_prompt
+
 from google import genai
 from google.genai import types
 
@@ -28,7 +30,11 @@ def main():
 def generate_content(client, messages, prompt, verbose):
     response = client.models.generate_content(
         model='gemini-2.5-flash',
-        contents=messages
+        contents=messages,
+        config=types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            temperature=0.5
+        )
     )
 
     # Verify successful API request
@@ -38,8 +44,9 @@ def generate_content(client, messages, prompt, verbose):
     # Print --verbose response
     if verbose is True:
         print(f"User prompt: {prompt}")
+        print(f"System prompt: {system_prompt}") 
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.prompt_token_count}") 
+        print(f"Response tokens: {response.usage_metadata.prompt_token_count}")
     
     # Print response
     print(f"Response: {response.text}")
