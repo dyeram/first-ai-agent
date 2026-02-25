@@ -31,3 +31,19 @@ def format_info(path, item):
 
 def get_dir_contents(dir):
     return "\n".join(map(lambda item: format_info(os.path.join(dir, item), item), os.listdir(dir))) 
+
+
+# Declaration: provides schema which tells LLM how to call the function
+schema_get_files_info = types.FunctionDeclaration(
+    name="get_files_info",
+    description="Lists files in a specified directory relative to the working directory, providing file size and directory status",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="Directory path to list files from, relative to the working directory (default is the working directory itself)",
+            ),
+        },
+    ),
+)
