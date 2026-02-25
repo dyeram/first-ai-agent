@@ -3,6 +3,7 @@ import argparse
 
 from dotenv import load_dotenv
 from prompts import system_prompt
+from call_function import available_functions
 
 from google import genai
 from google.genai import types
@@ -33,6 +34,7 @@ def generate_content(client, messages, prompt, verbose):
         contents=messages,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
+            tools=[available_functions],
             temperature=0.5
         )
     )
