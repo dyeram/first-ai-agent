@@ -36,6 +36,7 @@ def get_dir_contents(dir):
 
 
 # Declaration: provides schema which tells LLM how to call the function
+# Security risk: DO NOT include "working_directory" inside properties!!
 schema_get_files_info = types.FunctionDeclaration(
     name="get_files_info",
     description="Lists files in a specified directory relative to the working directory, providing file size and directory status",

@@ -2,11 +2,11 @@ import os
 import argparse
 
 from dotenv import load_dotenv
-from prompts import system_prompt
-from call_function import available_functions
-
 from google import genai
 from google.genai import types
+
+from prompts import system_prompt
+from call_function import available_functions
 
 def main():
     # Setup argument parser
@@ -34,8 +34,7 @@ def generate_content(client, messages, prompt, verbose):
         contents=messages,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
-            tools=[available_functions],
-            temperature=0.5
+            tools=[available_functions]
         )
     )
 
@@ -49,9 +48,14 @@ def generate_content(client, messages, prompt, verbose):
         print(f"System prompt: {system_prompt}") 
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.prompt_token_count}")
-    
-    # Print response
-    print(f"Response: {response.text}")
+
+    # Print response: function calls (if there are any)
+    if response.function_calls is not None:
+        for function_call in response.function_calls:
+            print(f"Calling function: {function_call.name}({function_call.args})")
+    else: 
+        # Print response: text (default response)
+        print(f"Response: {response.text}")
 
 if __name__ == "__main__":
     main()
