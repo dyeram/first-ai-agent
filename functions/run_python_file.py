@@ -73,8 +73,9 @@ schema_run_python_file = types.FunctionDeclaration(
                 ),
             ),
             "args": types.Schema(
-                type=types.Type.ARRAY(
-                    items=types.Type.STRING,
+                type=types.Type.ARRAY,
+                items=types.Schema(
+                    type=types.Type.STRING,
                 ),
                 description=(
                     "An optional list of arguments that is passed to the function"
