@@ -1,6 +1,8 @@
 # functions/get_file_content
 
 import os.path
+from google.genai import types
+
 from config import CHAR_LIMIT
 
 def get_file_content(working_directory, file_path):
@@ -22,7 +24,7 @@ def get_file_content(working_directory, file_path):
         with open(target_file, "r") as f:
             content = f.read(CHAR_LIMIT)
             
-                # If there's a character at CHAR_LIMIT + 1
+            # If there's a character at CHAR_LIMIT + 1
             if f.read(1):
                     content += f'[...File "{file_path}" truncated at {CHAR_LIMIT} characters]'
             
@@ -30,3 +32,28 @@ def get_file_content(working_directory, file_path):
     
     except Exception as e:
         return f"Error: {e}"
+    
+
+# Declaration: provides schema which tells LLM how to call the function
+# Security risk: DO NOT include "working_directory" inside properties!!
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description=(
+        "Opens and reads a specified file, returning its content. "
+        "If the content exdeeds a system-defined character limit, it is truncated "
+        "and a short truncation notice is appended."
+    ),
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description=(
+                    "The path of the file that is being read. "
+                    "The file's path is relative to the working directory"
+                ),
+            ),
+        },
+        required=["file_path"],
+    ),
+)

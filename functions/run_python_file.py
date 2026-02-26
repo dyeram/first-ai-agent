@@ -2,6 +2,7 @@
 
 import os.path
 import subprocess
+from google.genai import types
 
 def run_python_file(working_directory, file_path, args=None):
     try:
@@ -51,20 +52,31 @@ def run_python_file(working_directory, file_path, args=None):
         return f"Error: {e}"
         
 
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-    except Exception as e:
-        return f"Error: {e}"
+# Declaration: provides schema which tells LLM how to call the function
+# Security risk: DO NOT include "working_directory" inside properties!!
+schema_run_python_file = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Runs python file with optional arguments.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description=(
+                    "The path of the specified file that is being written to. "
+                    "The file's parent directories are also created if they do not exist already. "
+                    "The file's path is relative to the working directory"
+                ),
+            ),
+            "args": types.Schema(
+                type=types.Type.ARRAY(
+                    items=types.Type.STRING
+                ),
+                description=(
+                    "An optional list of arguments that is passed to the function"
+                ),
+            )
+        },
+        required=["file_path"],
+    ),
+)
