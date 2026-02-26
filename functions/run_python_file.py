@@ -60,7 +60,7 @@ schema_run_python_file = types.FunctionDeclaration(
         "Executes a specified python file within the system-defined working directory, "
         "optionally passing command-line arguments, and returns its standard output, "
         "standard error, and exit status."
-    )
+    ),
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
@@ -74,12 +74,12 @@ schema_run_python_file = types.FunctionDeclaration(
             ),
             "args": types.Schema(
                 type=types.Type.ARRAY(
-                    items=types.Type.STRING
+                    items=types.Type.STRING,
                 ),
                 description=(
                     "An optional list of arguments that is passed to the function"
                 ),
-            )
+            ),
         },
         required=["file_path"],
     ),
