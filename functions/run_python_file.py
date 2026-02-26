@@ -56,7 +56,11 @@ def run_python_file(working_directory, file_path, args=None):
 # Security risk: DO NOT include "working_directory" inside properties!!
 schema_run_python_file = types.FunctionDeclaration(
     name="run_python_file",
-    description="Runs python file with optional arguments.",
+    description=(
+        "Executes a specified python file within the system-defined working directory, "
+        "optionally passing command-line arguments, and returns its standard output, "
+        "standard error, and exit status."
+    )
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
