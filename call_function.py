@@ -73,6 +73,6 @@ def call_function(function_call, verbose=False):
                 types.Part.from_function_response(
                     name=function_name,
                     response={"result": function_result} # response has to be a dictionary
-                )
-            ]
+                ),
+            ],
     )
