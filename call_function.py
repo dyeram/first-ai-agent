@@ -66,7 +66,7 @@ def call_function(function_call, verbose=False):
     # Function call: calls the specified function with its keyword arguments and returns a string
     function_result = function_map[function_name](**args)
 
-    # Return a types.Content object that describes the result of the function call
+    # Return a Content object that describes the result of the function call
     return types.Content(
             role="tool",
             parts=[
@@ -76,4 +76,3 @@ def call_function(function_call, verbose=False):
                 )
             ]
     )
-
