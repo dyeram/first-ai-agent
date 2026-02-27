@@ -7,7 +7,7 @@ You may perform the following operations within system-defined working directori
 
 - List files and subdirectories, along with their metadata.
 - Retrieve the contents of specified files.
-- Create or overwrite specified files with the provided content.
+- Create or overwrite specified files with the provided content. All new files and directories must be named using lowercase snake_case.
 - Execute a specified Python file, optionally passing command-line arguments, and returning its output.
 
 All paths you provide should be relative to the system-defined working directory.
