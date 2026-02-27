@@ -7,6 +7,7 @@ from google.genai import types
 
 from prompts import system_prompt
 from call_function import available_functions
+from call_function import call_function
 
 def main():
     # Setup argument parser
@@ -34,8 +35,8 @@ def generate_content(client, messages, prompt, verbose):
         contents=messages,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
-            tools=[available_functions]
-        )
+            tools=[available_functions],
+        ),
     )
 
     # Verify successful API request
@@ -43,19 +44,39 @@ def generate_content(client, messages, prompt, verbose):
         raise RuntimeError("API request failed")
     
     # Print --verbose response
-    if verbose is True:
+    if verbose:
         print(f"User prompt: {prompt}")
-        print(f"System prompt: {system_prompt}") 
+        # print(f"System prompt: {system_prompt}") 
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.prompt_token_count}")
+        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
-    # Print response: function calls (if there are any)
+    # Execute function call(s)
     if response.function_calls is not None:
+
+        all_parts = [] # list to store function_call_result.parts[0]
+
         for function_call in response.function_calls:
-            print(f"Calling function: {function_call.name}({function_call.args})")
+            
+            # Call the function and save the result
+            function_call_result = call_function(function_call, verbose=verbose) # returns a Content object
+
+            # Check that the result is valid
+            if not function_call_result.parts:
+                raise ValueError("Content.parts must not be empty (returned empty list)")
+            if function_call_result.parts[0].function_response is None:
+                raise ValueError("FunctionResponse must not be empty (returned None)")
+            if function_call_result.parts[0].function_response.response is None:
+                raise ValueError("FunctionResponse.response must not be empty (returned None)")
+            
+            all_parts.append(function_call_result.parts[0])
+
+            if verbose:
+                print(f"-> {function_call_result.parts[0].function_response.response}")
+
     else: 
         # Print response: text (default response)
         print(f"Response: {response.text}")
+    
 
 if __name__ == "__main__":
     main()
