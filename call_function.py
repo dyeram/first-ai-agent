@@ -45,7 +45,7 @@ def call_function(function_call, verbose=False):
         return types.Content(
             role="tool",
             parts=[
-                types.Parts.from_function_response(
+                types.Part.from_function_response(
                     name=function_name,
                     response={"error": f"Unknown function: {function_name}"},
                 )
