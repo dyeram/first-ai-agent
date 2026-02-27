@@ -1,7 +1,6 @@
 # functions/get_files_info.py
 
 import os.path
-
 from google.genai import types
 
 def get_files_info(working_directory, directory="."):
