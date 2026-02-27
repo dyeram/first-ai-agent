@@ -61,17 +61,24 @@ def generate_content(client, messages, prompt, verbose):
             function_call_result = call_function(function_call, verbose=verbose) # returns a Content object
 
             # Check that the result is valid
-            if not function_call_result.parts:
+            parts = function_call_result.parts
+            if not parts:
                 raise ValueError("Content.parts must not be empty (returned empty list)")
-            if function_call_result.parts[0].function_response is None:
+            
+            part0 = parts[0]
+            fr = part0.function_response
+            if fr is None:
                 raise ValueError("FunctionResponse must not be empty (returned None)")
-            if function_call_result.parts[0].function_response.response is None:
+
+            fr_resp = fr.response
+            if fr_resp is None:            
                 raise ValueError("FunctionResponse.response must not be empty (returned None)")
             
-            all_parts.append(function_call_result.parts[0])
+            # Append the part0 from this function call result to the list of part0's from all function calls
+            all_parts.append(part0)
 
             if verbose:
-                print(f"-> {function_call_result.parts[0].function_response.response}")
+                print(f"-> {fr_resp}")
 
     else: 
         # Print response: text (default response)
