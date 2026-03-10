@@ -31,7 +31,6 @@ def main():
     # Print user prompt --verbose response
     if args.verbose:
         print(f"User prompt: {args.user_prompt}")
-
         
     # call the LLM model and handle reponses
     generate_content(client, messages, args.verbose)
@@ -89,9 +88,6 @@ def generate_content(client, messages, verbose):
                 fr_resp = fr.response
                 if fr_resp is None:            
                     raise ValueError("FunctionResponse.response must not be empty (returned None)")
-                
-                # Add model-generated tool result to conversation history
-                messages.append(function_call_result)
 
                 if verbose:
                     print(f"-> {fr_resp}")
