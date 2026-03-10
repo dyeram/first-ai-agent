@@ -27,13 +27,18 @@ def main():
     # Define inputs and LLM model (we use Google's genai)
     client = genai.Client(api_key = api_key)
     messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
+
+    # Print user prompt --verbose response
+    if args.verbose:
+        print(f"User prompt: {args.user_prompt}")
+
         
     # call the LLM model and handle reponses
-    generate_content(client, messages, args.user_prompt, args.verbose)
+    generate_content(client, messages, args.verbose)
 
 
 # Generate LLM responses (via Google's genai)
-def generate_content(client, messages, prompt, verbose):
+def generate_content(client, messages, verbose):
 
     for _ in range(MAX_ITERATIONS):
 
@@ -46,25 +51,26 @@ def generate_content(client, messages, prompt, verbose):
                 tools=[available_functions],
             ),
         )
+
+        # Print token counts --verbose response 
+        if verbose:
+            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+            print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
         
         # Add all model-generated messages to the conversation history
-        for candidate in response.candidates:
-            messages.append(candidate.content)
+        if response.candidates:
+            for candidate in response.candidates:
+                if candidate.content:
+                    messages.append(candidate.content)
 
         # Verify successful API request
         if not response.usage_metadata:
             raise RuntimeError("API request failed")
-        
-        # Print --verbose response
-        if verbose:
-            print(f"User prompt: {prompt}")
-            # print(f"System prompt: {system_prompt}") 
-            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-            print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
         # Execute function call(s)
         if response.function_calls is not None:
 
+            function_responses = [] # List of function result parts
             for function_call in response.function_calls:
                 
                 # Call the function and save the result
@@ -75,7 +81,7 @@ def generate_content(client, messages, prompt, verbose):
                 if not parts:
                     raise ValueError("Content.parts must not be empty (returned empty list)")
                 
-                part0 = parts[0]
+                part0 = parts[0] 
                 fr = part0.function_response
                 if fr is None:
                     raise ValueError("FunctionResponse must not be empty (returned None)")
@@ -90,13 +96,19 @@ def generate_content(client, messages, prompt, verbose):
                 if verbose:
                     print(f"-> {fr_resp}")
 
+                # Add function result part to list of function responses
+                function_responses.append(part0)
+
+            # Add function responses to the conversation history
+            messages.append(types.Content(role="user", parts=function_responses))
+
         else: 
             # Print response: text (default response)
             print(f"Response: {response.text}")
             break
     
     else: 
-        print("LLM model: max iteractions reached without a final response.")
+        print("LLM model: max iterations reached without a final response.")
         sys.exit(1)
     
 
