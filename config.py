@@ -1,2 +1,3 @@
-# character limit for output from get_file_content()
+WORKING_DIR = "./calculator"
 CHAR_LIMIT = 10000
+MAX_ITERATIONS = 20

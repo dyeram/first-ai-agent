@@ -8,6 +8,7 @@ from google.genai import types
 from prompts import system_prompt
 from call_function import available_functions
 from call_function import call_function
+from config import MAX_ITERATIONS
 
 def main():
     # Setup argument parser
@@ -22,67 +23,80 @@ def main():
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY environmental variable is missing.")
     
-    # Define inputs and call LLM (via Google's genai)
+    # Define inputs and LLM model (we use Google's genai)
     client = genai.Client(api_key = api_key)
     messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
+        
+    # call the LLM model and handle reponses
     generate_content(client, messages, args.user_prompt, args.verbose)
 
 
-# Generate LLM response (via Google's genai)
+# Generate LLM responses (via Google's genai)
 def generate_content(client, messages, prompt, verbose):
-    response = client.models.generate_content(
-        model='gemini-2.5-flash',
-        contents=messages,
-        config=types.GenerateContentConfig(
-            system_instruction=system_prompt,
-            tools=[available_functions],
-        ),
-    )
 
-    # Verify successful API request
-    if not response.usage_metadata:
-        raise RuntimeError("API request failed")
+    for _ in range(MAX_ITERATIONS):
+
+        # Call LLM model and generate response    
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=messages,
+            config=types.GenerateContentConfig(
+                system_instruction=system_prompt,
+                tools=[available_functions],
+            ),
+        )
+        
+        # Add all model-generated messages to the conversation history
+        for candidate in response.candidates:
+            messages.append(candidate.content)
+
+        # Verify successful API request
+        if not response.usage_metadata:
+            raise RuntimeError("API request failed")
+        
+        # Print --verbose response
+        if verbose:
+            print(f"User prompt: {prompt}")
+            # print(f"System prompt: {system_prompt}") 
+            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+            print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+
+        # Execute function call(s)
+        if response.function_calls is not None:
+
+            for function_call in response.function_calls:
+                
+                # Call the function and save the result
+                function_call_result = call_function(function_call, verbose=verbose) # returns a Content object
+
+                # Check that the result is valid
+                parts = function_call_result.parts
+                if not parts:
+                    raise ValueError("Content.parts must not be empty (returned empty list)")
+                
+                part0 = parts[0]
+                fr = part0.function_response
+                if fr is None:
+                    raise ValueError("FunctionResponse must not be empty (returned None)")
+
+                fr_resp = fr.response
+                if fr_resp is None:            
+                    raise ValueError("FunctionResponse.response must not be empty (returned None)")
+                
+                # Add model-generated tool result to conversation history
+                messages.append(function_call_result)
+
+                if verbose:
+                    print(f"-> {fr_resp}")
+
+        else: 
+            # Print response: text (default response)
+            print(f"Response: {response.text}")
+            break
     
-    # Print --verbose response
-    if verbose:
-        print(f"User prompt: {prompt}")
-        # print(f"System prompt: {system_prompt}") 
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
-
-    # Execute function call(s)
-    if response.function_calls is not None:
-
-        all_parts = [] # list to store function_call_result.parts[0]
-
-        for function_call in response.function_calls:
-            
-            # Call the function and save the result
-            function_call_result = call_function(function_call, verbose=verbose) # returns a Content object
-
-            # Check that the result is valid
-            parts = function_call_result.parts
-            if not parts:
-                raise ValueError("Content.parts must not be empty (returned empty list)")
-            
-            part0 = parts[0]
-            fr = part0.function_response
-            if fr is None:
-                raise ValueError("FunctionResponse must not be empty (returned None)")
-
-            fr_resp = fr.response
-            if fr_resp is None:            
-                raise ValueError("FunctionResponse.response must not be empty (returned None)")
-            
-            # Append the part0 from this function call result to the list of part0's from all function calls
-            all_parts.append(part0)
-
-            if verbose:
-                print(f"-> {fr_resp}")
-
     else: 
-        # Print response: text (default response)
-        print(f"Response: {response.text}")
+        print("LLM model: max iteractions reached without a final response.")
+        sys.exit(1)
     
 
 if __name__ == "__main__":
