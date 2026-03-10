@@ -1,14 +1,14 @@
 # Creates a Tool object that provides a list of functions that the LLM can use to generate a reponse.
 # Requires: a FunctionDeclaration object (schema) for each function.
 
-import copy
-
 from google.genai import types
 
 from functions.get_files_info import schema_get_files_info, get_files_info
 from functions.get_file_content import schema_get_file_content, get_file_content
 from functions.write_file import schema_write_file, write_file
 from functions.run_python_file import schema_run_python_file, run_python_file
+
+from config import WORKING_DIR
 
 # Available function declarations
 available_functions = types.Tool(
@@ -61,7 +61,7 @@ def call_function(function_call, verbose=False):
 
     # Add system-defined keyword argument "working_directory" to the arguments dictionary
     # Security: LLM can only call functions within the working directory and its subdirectories
-    args["working_directory"] = "./calculator"
+    args["working_directory"] = WORKING_DIR
 
     # Function call: calls the specified function with its keyword arguments and returns a string
     function_result = function_map[function_name](**args)
