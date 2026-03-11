@@ -18,5 +18,3 @@ The AI agent is called via API queries and is capable of performing basic functi
 
 - All file operations are restricted to a system-defined `working_directory` and its subdirectories.
 - Path validation is enforced within the file operation functions to prevent access outside this directory.
-- A 30 second timeout prevents the agent from running indefinitely (not implemented yet).
-
