@@ -51,5 +51,5 @@ You can obtain an API key from [Google AI Studio](https://aistudio.google.com/).
 ### 4. Run the agent
 
 ```bash
-uv run python main.py
+uv run main.py
 ```
