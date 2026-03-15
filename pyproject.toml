@@ -1,7 +1,7 @@
 [project]
 name = "first-ai-agent"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Command-line Python LLM agent with tool calling and a restricted workspace"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
