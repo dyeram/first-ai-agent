@@ -44,6 +44,26 @@ class TestCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.evaluate("+ 3")
 
+    def test_exponentiation_basic(self):
+        result = self.calculator.evaluate("2 ^ 3")
+        self.assertEqual(result, 8)
+
+    def test_exponentiation_precedence(self):
+        result = self.calculator.evaluate("2 * 3 ^ 2")
+        self.assertEqual(result, 18)
+
+    def test_sqrt_basic(self):
+        result = self.calculator.evaluate("sqrt(9)")
+        self.assertEqual(result, 3)
+
+    def test_sqrt_expression(self):
+        result = self.calculator.evaluate("sqrt(4 + 5)")
+        self.assertEqual(result, 3)
+
+    def test_mixed_expression_with_power_and_sqrt(self):
+        result = self.calculator.evaluate("2 * sqrt(9) + 3 ^ 2")
+        self.assertEqual(result, 15) # 2 * 3 + 9 = 6 + 9 = 15
+
 
 if __name__ == "__main__":
     unittest.main()
