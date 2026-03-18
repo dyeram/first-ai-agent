@@ -20,8 +20,8 @@ While tool access is constrained, the agent can write and execute arbitrary Pyth
 
 ## Security
 
-- All file operations are restricted to a system-defined `working_directory` and its subdirectories.
-- Executed code is not sandboxed and may access the broader file system. 
+- All tool/function calls are restricted to a system-defined `working_directory` and its subdirectories.
+- Arbitrary code execution is not isolated at the container- or the OS-level and can access the broader file system. 
 
 ## Setup
 
@@ -55,3 +55,9 @@ You can obtain an API key from [Google AI Studio](https://aistudio.google.com/).
 ```bash
 uv run main.py
 ```
+
+## Future Improvements
+
+- [ ] Sandbox `run_python_file` inside a Docker container
+- [ ] Add path validation to file access functions
+
