@@ -25,7 +25,15 @@ class Calculator:
     def evaluate(self, expression):
         if not expression or expression.isspace():
             return None
-        tokens = expression.strip().split()
+        # Tokenize the expression, adding spaces around parentheses and operators for easier splitting
+        # and handling sqrt function.
+        expression = expression.replace("(", " ( ").replace(")", " ) ")
+        expression = expression.replace("+", " + ").replace("-", " - ")
+        expression = expression.replace("*", " * ").replace("/", " / ")
+        expression = expression.replace("^", " ^ ")
+        expression = expression.replace("sqrt", " sqrt ")
+        tokens = [token for token in expression.split(" ") if token]
+
         return self._evaluate_infix(tokens)
 
     def _evaluate_infix(self, tokens):
