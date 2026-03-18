@@ -64,6 +64,45 @@ class TestCalculator(unittest.TestCase):
         result = self.calculator.evaluate("2 * sqrt(9) + 3 ^ 2")
         self.assertEqual(result, 15) # 2 * 3 + 9 = 6 + 9 = 15
 
+    def test_exponentiation_associativity(self):
+        # (2 ^ 3) ^ 2 = 8 ^ 2 = 64
+        # 2 ^ (3 ^ 2) = 2 ^ 9 = 512
+        # Exponentiation is right-associative, so 2 ^ 3 ^ 2 should be 2 ^ (3 ^ 2)
+        result = self.calculator.evaluate("2 ^ 3 ^ 2")
+        self.assertEqual(result, 512)
+
+    def test_parentheses_with_exponent(self):
+        result = self.calculator.evaluate("(2 + 3) ^ 2")
+        self.assertEqual(result, 25)
+
+    def test_sqrt_with_nested_expressions(self):
+        result = self.calculator.evaluate("sqrt(4 * (2 + 1) + 1)")
+        self.assertAlmostEqual(result, 3.605551275463989)
+
+    def test_invalid_sqrt_input_empty(self):
+        with self.assertRaises(ValueError):
+            self.calculator.evaluate("sqrt()")
+
+    def test_invalid_sqrt_input_missing_parenthesis(self):
+        with self.assertRaises(ValueError):
+            self.calculator.evaluate("sqrt(9")
+
+    def test_mismatched_parentheses_missing_open(self):
+        with self.assertRaises(ValueError):
+            self.calculator.evaluate("2 + 3)")
+
+    def test_mismatched_parentheses_missing_close(self):
+        with self.assertRaises(ValueError):
+            self.calculator.evaluate("(2 + 3")
+
+    def test_invalid_input_empty_parentheses(self):
+        with self.assertRaises(ValueError):
+            self.calculator.evaluate("()")
+
+    def test_invalid_input_unsupported_character(self):
+        with self.assertRaises(ValueError):
+            self.calculator.evaluate("2 + @")
+
 
 if __name__ == "__main__":
     unittest.main()
