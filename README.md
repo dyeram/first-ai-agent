@@ -5,6 +5,8 @@ Designed as a minimal example for building LLM agents with restricted file acces
 
 The agent is called via API queries and can perform basic function-calling logic using Google's Gemini 2.5 Flash model.
 
+While tool access is constrained, the agent can write and execute arbitrary Python code via exposed functions. As a result, it should be treated as having developer-level access within the execution environment rather than as a fully sandboxed or secure system.
+
 ## AI Agent
 
 - **LLM model:** Gemini 2.5 Flash
@@ -18,9 +20,8 @@ The agent is called via API queries and can perform basic function-calling logic
 
 ## Security
 
-- Tool/function calls are restricted to a system-defined `working_directory` and its subdirectories.
-- Path validation prevents access outside this directory.
-- The agent can generate and execute Python code; this is not fully sandboxed and may allow access outside the `working_directory` if explicitly instructed.
+- All tool/function calls are restricted to a system-defined `working_directory` and its subdirectories.
+- Arbitrary code execution is not isolated at the container- or the OS-level and can access the broader file system. 
 
 ## Setup
 
@@ -54,3 +55,9 @@ You can obtain an API key from [Google AI Studio](https://aistudio.google.com/).
 ```bash
 uv run main.py
 ```
+
+## Future Improvements
+
+- [ ] Sandbox `run_python_file` inside a Docker container
+- [ ] Add path validation to file access functions
+
