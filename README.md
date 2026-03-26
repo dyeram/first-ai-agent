@@ -1,6 +1,6 @@
 # File Management Agent
 
-AI agent that can safely interact with a local file system using a restricted set of of tool/function calls.  
+AI agent that can interact with a local file system using tool/function calls.  
 Designed as a minimal example for building LLM agents with restricted file access.
 
 The agent is called via API queries and can perform basic function-calling logic using Google's Gemini 2.5 Flash model.
