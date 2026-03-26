@@ -1,6 +1,6 @@
 # File Management Agent
 
-AI agent that can safely interact with a local file system using tool/function calls.  
+AI agent that can interact with a local file system using tool/function calls.  
 Designed as a minimal example for building LLM agents with restricted file access.
 
 The agent is called via API queries and can perform basic function-calling logic using Google's Gemini 2.5 Flash model.
@@ -18,8 +18,9 @@ The agent is called via API queries and can perform basic function-calling logic
 
 ## Security
 
-- All file operations are restricted to a system-defined `working_directory` and its subdirectories.
+- Tool/function calls are restricted to a system-defined `working_directory` and its subdirectories.
 - Path validation prevents access outside this directory.
+- The agent can generate and execute Python code; this is not fully sandboxed and may allow access outside the `working_directory` if explicitly instructed.
 
 ## Setup
 
